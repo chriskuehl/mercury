@@ -36,7 +36,12 @@ print("	CustomLog /var/log/apache2/access.log vhost_combined")
 print("	ErrorLog /var/log/apache2/error.log")
 
 print("	ServerName {}{}".format("" if config['www'] else "www.", domain))
-print("	Redirect permanent / http{}://{}{}/".format("s" if config['ssl']['active'] else "", "www." if config['www'] else "", domain))
+
+if "redirect" in config:
+	print("	Redirect " + config['redirect'])
+else:
+	print("	Redirect permanent / http{}://{}{}/".format("s" if config['ssl']['active'] else "", "www." if config['www'] else "", domain))
+
 print("</VirtualHost>")
 
 #### primary vhost
@@ -53,6 +58,9 @@ if config['allowIndexes']:
 print("	")
 
 
+# redirect
+if "redirect" in config:
+	print("	Redirect " + config['redirect'])
 
 # logging
 print("	CustomLog {}access.log vhost_combined".format(config['logPath']))
